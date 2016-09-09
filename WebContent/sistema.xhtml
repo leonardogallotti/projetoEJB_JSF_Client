@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+
+<h:body> 
+
+  <p:tabView id="tb" orientation="left">
+  
+  
+   <p:tab title="Cadastrar">
+    <h:form id="form1">
+     <p:panelGrid columns="2">
+     
+      <p:outputLabel value="Nome"/>
+      <p:inputText value="#{mb.produto.nome}"/>
+           
+      <p:outputLabel value="Quantidade"/>
+      <p:inputText value="#{mb.produto.quantidade}"/>
+      
+      <p:commandButton value="Gravar" style="color:white" icon="fa fa-floppy-o"  action="#{mb.gravar}" update=":tb:form1, :tb:form2" />
+     
+     
+      </p:panelGrid> 
+     <p:growl/>
+    </h:form>
+   </p:tab>
+  
+  
+     <p:tab title="Consultar/Editar">
+      <h:form id="form2">
+        <p:dataTable value="#{mb.lista}" var="linha" paginator="true" rows="7">
+		  
+		  
+		  <p:column headerText="Nome" filterBy="#{linha.nome}">
+		   <p:outputLabel value="#{linha.nome}"/>
+		  </p:column>
+		  
+		  <p:column headerText="Quantidade">
+		   <p:outputLabel value="#{linha.quantidade}"/>
+		  </p:column>
+		  
+		  	  
+		  <p:column width="70" headerText="Editar">			
+			<p:commandButton style="color:white" icon="fa fa-pencil-square-o" onclick="PF('edtProduto').show()" ajax="true" update=":tb:prodForm">
+			  <f:setPropertyActionListener value="#{linha}" target="#{mb.produto}"/>			
+			</p:commandButton>
+		  </p:column>
+		
+		
+		 <p:column width="70" headerText="Excluir">
+			<p:commandButton style="color:white" icon="fa fa-trash" action="#{mb.deletar}" update=":tb:form2">
+			  <f:setPropertyActionListener value="#{linha}" target="#{mb.produto}"/>
+				 <p:confirm icon="ui-icon-alert" message="Deseja Excluir?" header="confirma?"/>
+			</p:commandButton>
+		  </p:column>	  
+        </p:dataTable>
+        
+         <p:confirmDialog showEffect="fade" hideEffect="clip" global="true"	rendered="true">
+				<p:commandButton type="button" value="sim"	styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton type="button" value="nao"	styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+        
+         <p:growl/>
+        </h:form>
+        
+        
+        
+        <p:dialog id="edtProduto" modal="true" appendTo="@(body)" widgetVar="edtProduto" showEffect="fade" header="Editar Produto">
+		   <h:form id="prodForm">
+			<p:growl for="prodForm"/>
+			 <p:panelGrid columns="2">
+							
+				<p:outputLabel value="Nome"/>
+				<p:inputText   value="#{mb.produto.nome}"/>
+			
+				<p:outputLabel   value="Rua"/>
+				<p:inputText          value="#{mb.produto.quantidade}" />
+						     
+				
+			
+												
+				<p:commandButton value="Confirmar Alteração" action="#{mb.atualizar}" ajax="false" update=":tb:form2" onclick="PF('edtProduto').hide()"/>
+			
+			 </p:panelGrid>
+		    </h:form>	
+	       </p:dialog>       
+          <p:growl/>
+         </p:tab>
+      
+      
+       </p:tabView>
+      </h:body> 
+    </html>
